@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/*
+  CEZARY.IO é uma identidade Dark Premium fixa — não um app com alternância
+  clara/escura. Os tokens abaixo vêm de identidade/design-guide.md e não
+  devem ser editados aqui; qualquer mudança de paleta é decisão de marca,
+  registrada naquele documento primeiro.
+*/
+
+:root {
+  --color-bg: #0a0a0a;
+  --color-bg-card: #141414;
+  --color-bg-card-hover: #181818;
+  --color-border: #272727;
+  --color-border-hover: #3a3a3a;
+  --color-text: #f2f2f2;
+  --color-text-muted: #8c8c8c;
+  --color-text-faint: #565656;
+  --color-contrast: #ffffff;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-bg-card: var(--color-bg-card);
+  --color-bg-card-hover: var(--color-bg-card-hover);
+  --color-border: var(--color-border);
+  --color-border-hover: var(--color-border-hover);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-faint: var(--color-text-faint);
+  --color-contrast: var(--color-contrast);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}

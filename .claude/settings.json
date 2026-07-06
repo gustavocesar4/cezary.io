@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://fonts.gstatic.com\" -Method Head -TimeoutSec 8 -UseBasicParsing; Write-Output \"OK: $\\($r.StatusCode\\)\" } catch { Write-Output \"FAIL: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell(winget install --id OpenJS.NodeJS.LTS -e --source winget --accept-source-agreements --accept-package-agreements)",
+      "PowerShell(winget install --id Git.Git -e --source winget --accept-source-agreements --accept-package-agreements)"
+    ]
+  }
+}
