@@ -126,10 +126,24 @@ real e confirmado:
 | Fase | Conteúdo |
 |---|---|
 | 0 — Identidade | ✅ Concluída |
-| 1 — Conteúdo base | Textos institucionais (Home, Sobre, Serviços, FAQ) |
-| 2 — Estrutura técnica | Scaffold Next.js, Tailwind, deploy inicial |
+| 1 — Conteúdo base | ✅ Concluída — `documentacao/copy/` |
+| 2 — Estrutura técnica | ✅ Concluída — ver nota abaixo |
 | 3 — Páginas institucionais | Implementação visual de Home, Serviços, Sobre, FAQ |
 | 4 — Formulário de orçamento | Fluxo multi-etapas + Resend + segundo canal + teste e2e |
 | 5 — Blog | Listagem, artigo, integração com `/publicar-tema` e `/aprovar-post` |
 | 6 — Analytics e lançamento | GA, GSC, Meta Pixel, domínio, revisão final, ar |
 | 7+ — Futuro (fora de escopo agora) | Produto SaaS (`sistema/`) — monorepo, auth e banco entram só aqui |
+
+## Nota de execução — Fase 2 (2026-07-06)
+
+Fundação técnica implementada e validada de ponta a ponta:
+
+- Scaffold Next.js 16 + TypeScript estrito + Tailwind v4 + ESLint, em `site/`
+- **Prettier** (com `prettier-plugin-tailwindcss`) adicionado como formatador padrão — não estava no escopo original deste documento, incorporado a pedido explícito na execução da Fase 2
+- Estrutura de pastas criada exatamente como especificado acima
+- Design system base implementado em `components/ui/` (Button, Card, Input/Textarea, Logo) e tokens em `app/globals.css`, direto de `identidade/design-guide.md`
+- Repositório GitHub criado (`gustavocesar4/cezary.io`), projeto Vercel conectado, **Root Directory** configurado para `projetos/CEZARY.IO/site` (necessário porque o app não fica na raiz do repositório) — sem isso o deploy automático falha ao procurar `app/`
+- Deploy de produção validado: push em `main` → build automático → `Ready`
+- `node` e `git` não estavam instalados na máquina de desenvolvimento; foram instalados via winget como parte desta fase
+
+Próxima fase (3) implementa as páginas institucionais em cima desta base, usando o conteúdo já congelado em `documentacao/copy/`.

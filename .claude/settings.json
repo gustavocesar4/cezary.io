@@ -5,7 +5,8 @@
       "PowerShell(node --version)",
       "PowerShell(npm --version)",
       "PowerShell(winget install --id OpenJS.NodeJS.LTS -e --source winget --accept-source-agreements --accept-package-agreements)",
-      "PowerShell(winget install --id Git.Git -e --source winget --accept-source-agreements --accept-package-agreements)"
+      "PowerShell(winget install --id Git.Git -e --source winget --accept-source-agreements --accept-package-agreements)",
+      "PowerShell(Get-ChildItem \"$env:LOCALAPPDATA\\\\com.vercel.cli\" -Recurse -Force)"
     ]
   }
 }
