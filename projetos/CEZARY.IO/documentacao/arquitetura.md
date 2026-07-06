@@ -129,7 +129,7 @@ real e confirmado:
 | 1 — Conteúdo base | ✅ Concluída — `documentacao/copy/` |
 | 2 — Estrutura técnica | ✅ Concluída — ver nota abaixo |
 | 3 — Páginas institucionais | ✅ Concluída — ver nota abaixo |
-| 4 — Formulário de orçamento | Fluxo multi-etapas + Resend + segundo canal + teste e2e |
+| 4 — Formulário de orçamento | ✅ Código concluído — credenciais pendentes, ver nota abaixo |
 | 5 — Blog | Listagem, artigo, integração com `/publicar-tema` e `/aprovar-post` |
 | 6 — Analytics e lançamento | GA, GSC, Meta Pixel, domínio, revisão final, ar |
 | 7+ — Futuro (fora de escopo agora) | Produto SaaS (`sistema/`) — monorepo, auth e banco entram só aqui |
@@ -171,3 +171,33 @@ copiado literalmente (nenhum texto novo foi criado nesta fase):
   desta fase e da Fase 1)
 
 Deploy automático validado novamente após o push desta fase: `Ready` em produção.
+
+## Nota de execução — Fase 4 (2026-07-06)
+
+Formulário multi-etapas implementado por completo:
+
+- `lib/schemas/orcamento.ts` — schema Zod por etapa (5 etapas, conforme a
+  seção 6 do planejamento original) e schema completo para o envio final
+- `components/site/orcamento-form.tsx` — Client Component com estado local,
+  validação por etapa, sem nenhuma dependência de formulário externa
+  (react-hook-form etc. não eram necessários pro tamanho deste formulário)
+- `app/api/orcamento/route.ts` — valida com Zod, tenta dois canais em
+  paralelo (`Promise.allSettled`): e-mail via Resend e um canal secundário
+  via webhook genérico. Só retorna erro ao usuário se **os dois** falharem —
+  nenhum lead se perde silenciosamente se um canal cair
+- **Achado do teste e2e:** o primeiro rádio de cada grupo estava herdando o
+  texto do `<label>` que envolvia o grupo inteiro (bug de semântica HTML —
+  `<label>` é para um único controle). Corrigido trocando por
+  `<fieldset>`/`<legend>` nos grupos de opção. Sem o teste e2e, esse bug de
+  acessibilidade real provavelmente passaria despercebido
+- Teste e2e (`e2e/orcamento.spec.ts`) cobre o envio completo (mockando a
+  resposta de `/api/orcamento`) e o bloqueio de avanço sem preencher a
+  etapa 1 — único teste do projeto, por decisão já registrada acima
+
+**Pendência real, não técnica:** nenhuma credencial de envio está configurada
+ainda. `RESEND_API_KEY`/`ORCAMENTO_NOTIFICATION_EMAIL` (conta Resend) e
+`ORCAMENTO_SECOND_CHANNEL_WEBHOOK` (Airtable, Google Sheets via Apps Script,
+ou Zapier/Make) dependem de contas externas que só o usuário pode criar — ver
+`.env.example`. Até lá, o formulário em produção responde com erro 502 ao
+tentar enviar, por design: preferimos falhar visivelmente a fingir sucesso
+sem registrar o lead em lugar nenhum.
