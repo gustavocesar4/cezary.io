@@ -128,7 +128,7 @@ real e confirmado:
 | 0 — Identidade | ✅ Concluída |
 | 1 — Conteúdo base | ✅ Concluída — `documentacao/copy/` |
 | 2 — Estrutura técnica | ✅ Concluída — ver nota abaixo |
-| 3 — Páginas institucionais | Implementação visual de Home, Serviços, Sobre, FAQ |
+| 3 — Páginas institucionais | ✅ Concluída — ver nota abaixo |
 | 4 — Formulário de orçamento | Fluxo multi-etapas + Resend + segundo canal + teste e2e |
 | 5 — Blog | Listagem, artigo, integração com `/publicar-tema` e `/aprovar-post` |
 | 6 — Analytics e lançamento | GA, GSC, Meta Pixel, domínio, revisão final, ar |
@@ -147,3 +147,27 @@ Fundação técnica implementada e validada de ponta a ponta:
 - `node` e `git` não estavam instalados na máquina de desenvolvimento; foram instalados via winget como parte desta fase
 
 Próxima fase (3) implementa as páginas institucionais em cima desta base, usando o conteúdo já congelado em `documentacao/copy/`.
+
+## Nota de execução — Fase 3 (2026-07-06)
+
+Páginas institucionais implementadas com o conteúdo de `documentacao/copy/`
+copiado literalmente (nenhum texto novo foi criado nesta fase):
+
+- `/`, `/sobre`, `/servicos`, `/servicos/sites`, `/servicos/sistemas`,
+  `/servicos/automacoes-ia`, `/faq` — todas usando `Button`, `Card` e os
+  tokens do design system da Fase 2
+- **`Navbar`** e **`Footer`** implementados (não existiam antes) — navbar com
+  menu mobile funcional (toggle simples, sem lib externa), CTA sempre em
+  variante `secondary`, nunca `primary`, conforme a regra do design guide
+- **`components/site/service-sections.tsx`**: as 3 páginas de frente (Sites,
+  Sistemas, Automações com IA) compartilham os mesmos componentes de seção,
+  já que seguem estrutura idêntica por decisão editorial — evita 3 cópias do
+  mesmo JSX
+- FAQ usa `<details>/<summary>` nativo, conforme já especificado
+- **`/orcamento`** recebeu uma página placeholder (sem formulário) — o fluxo
+  real é escopo da Fase 4. Existe agora só para nenhum CTA do site apontar
+  para um link quebrado
+- `/cases` não foi criada — não há conteúdo para ela ainda (fora de escopo
+  desta fase e da Fase 1)
+
+Deploy automático validado novamente após o push desta fase: `Ready` em produção.
