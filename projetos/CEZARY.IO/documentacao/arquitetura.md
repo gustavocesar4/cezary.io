@@ -130,7 +130,7 @@ real e confirmado:
 | 2 — Estrutura técnica | ✅ Concluída — ver nota abaixo |
 | 3 — Páginas institucionais | ✅ Concluída — ver nota abaixo |
 | 4 — Formulário de orçamento | ✅ Código concluído — credenciais pendentes, ver nota abaixo |
-| 5 — Blog | Listagem, artigo, integração com `/publicar-tema` e `/aprovar-post` |
+| 5 — Blog | ✅ Concluída — ver nota abaixo |
 | 6 — Analytics e lançamento | GA, GSC, Meta Pixel, domínio, revisão final, ar |
 | 7+ — Futuro (fora de escopo agora) | Produto SaaS (`sistema/`) — monorepo, auth e banco entram só aqui |
 
@@ -199,8 +199,48 @@ Formulário multi-etapas implementado por completo:
 credenciais em `documentacao/configuracao-integracoes.md`; o código do
 Apps Script já está pronto em `site/scripts/google-apps-script-orcamento.gs`.
 
-**Pendência real, não técnica:** as credenciais ainda não foram criadas —
-isso depende de contas externas que só o usuário pode criar (ver guia
-acima). Até lá, o formulário em produção responde com erro 502 ao tentar
-enviar, por design: preferimos falhar visivelmente a fingir sucesso sem
-registrar o lead em lugar nenhum.
+**Decisão (2026-07-06):** configuração das credenciais reais adiada de
+propósito — o site ainda está em fase de construção/teste. Enquanto
+`RESEND_API_KEY`/`ORCAMENTO_NOTIFICATION_EMAIL`/
+`ORCAMENTO_SECOND_CHANNEL_WEBHOOK` não existirem, a rota roda em **modo
+mock**: valida com Zod normalmente, não envia nada de verdade, loga a
+submissão no servidor (`console.log`) e responde `{ ok: true }` — o
+front-end mostra a mesma mensagem de sucesso de sempre. Assim que qualquer
+uma das credenciais for adicionada, o envio real correspondente liga
+sozinho, sem mudança de código. Erro real (502) só acontece se um canal
+**configurado** falhar de fato ao tentar enviar.
+
+## Nota de execução — Fase 5 (2026-07-06)
+
+Pipeline de blog implementado, compatível com `/publicar-tema` e
+`/aprovar-post` (frontmatter e caminho conferidos direto nos `SKILL.md`
+dessas duas skills):
+
+- `content/blog/<slug>.mdx` com frontmatter `title`, `description`,
+  `publishedAt`, `author`, `keywords` (lista) e `draft` — exatamente o
+  formato que `/publicar-tema` já gera
+- `lib/blog.ts` — leitura e parsing via `gray-matter`, ordenação por data,
+  cálculo de tempo de leitura (`reading-time`)
+- `/blog` — listagem (com estado vazio, já que não há posts reais ainda) e
+  `/blog/[slug]` — artigo renderizado via `next-mdx-remote/rsc`, com
+  tipografia própria em `components/site/mdx-components.tsx` (sem plugin
+  de terceiros tipo `@tailwindcss/typography` — poucos elementos, não
+  justificava a dependência)
+- **Um post em `draft: true` não é só ocultado da listagem — a rota
+  `/blog/[slug]` retorna 404 se alguém acessar a URL direta.** Sem isso, o
+  frontmatter `draft` não travaria nada de verdade: o artigo já estaria
+  acessível por quem soubesse o link, mesmo antes do `/aprovar-post` rodar
+- Testado com um post de rascunho temporário (removido depois de validar
+  parsing, renderização MDX e o 404 de draft — não ficou nenhum conteúdo
+  fictício no repositório)
+- `/blog` adicionado à Navbar e ao Footer
+
+## Verificação visual — 2026-07-06
+
+Build de produção rodado localmente e revisado em Chromium via Playwright,
+em viewport mobile (390px) e desktop (1440px), cobrindo todas as páginas.
+Confirmado: responsividade correta, menu mobile abre/fecha, nenhum
+problema de layout. Um tom azulado percebido no texto secundário sobre o
+fundo escuro foi investigado via `getComputedStyle` — confirmado como
+ilusão de ótica (contraste simultâneo contra o preto): a cor computada é
+`rgb(140,140,140)`, perfeitamente neutra.

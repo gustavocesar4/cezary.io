@@ -79,6 +79,9 @@ export async function POST(request: Request) {
 
   const emailOk = emailResult.status === "fulfilled";
   const secondChannelOk = secondChannelResult.status === "fulfilled";
+  const emailSkipped = emailOk && emailResult.value.skipped;
+  const secondChannelSkipped =
+    secondChannelOk && secondChannelResult.value.skipped;
 
   if (!emailOk) {
     console.error("[orcamento] Falha no envio de e-mail:", emailResult.reason);
@@ -90,8 +93,19 @@ export async function POST(request: Request) {
     );
   }
 
-  // Sucesso exige pelo menos um canal de registro real — nenhum dos dois
-  // configurado/funcionando significa que o lead se perderia silenciosamente.
+  // Enquanto o site estiver em construção, nenhum canal precisa estar
+  // configurado: o envio funciona em modo mock (log local, sem envio real)
+  // até as credenciais reais serem adicionadas — ver
+  // documentacao/configuracao-integracoes.md.
+  if (emailSkipped && secondChannelSkipped) {
+    console.log(
+      "[orcamento] Modo mock (nenhum canal configurado):",
+      parsed.data,
+    );
+  }
+
+  // Erro real só quando os dois canais estavam configurados e os dois
+  // falharam de fato — nenhum lead deve se perder silenciosamente.
   if (!emailOk && !secondChannelOk) {
     return NextResponse.json(
       { error: "Não foi possível registrar o pedido no momento" },
