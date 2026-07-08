@@ -194,10 +194,13 @@ Formulário multi-etapas implementado por completo:
   resposta de `/api/orcamento`) e o bloqueio de avanço sem preencher a
   etapa 1 — único teste do projeto, por decisão já registrada acima
 
-**Pendência real, não técnica:** nenhuma credencial de envio está configurada
-ainda. `RESEND_API_KEY`/`ORCAMENTO_NOTIFICATION_EMAIL` (conta Resend) e
-`ORCAMENTO_SECOND_CHANNEL_WEBHOOK` (Airtable, Google Sheets via Apps Script,
-ou Zapier/Make) dependem de contas externas que só o usuário pode criar — ver
-`.env.example`. Até lá, o formulário em produção responde com erro 502 ao
-tentar enviar, por design: preferimos falhar visivelmente a fingir sucesso
-sem registrar o lead em lugar nenhum.
+**Canais escolhidos:** Resend (e-mail) + Google Sheets via Apps Script
+(canal secundário). Passo a passo completo de criação de conta e
+credenciais em `documentacao/configuracao-integracoes.md`; o código do
+Apps Script já está pronto em `site/scripts/google-apps-script-orcamento.gs`.
+
+**Pendência real, não técnica:** as credenciais ainda não foram criadas —
+isso depende de contas externas que só o usuário pode criar (ver guia
+acima). Até lá, o formulário em produção responde com erro 502 ao tentar
+enviar, por design: preferimos falhar visivelmente a fingir sucesso sem
+registrar o lead em lugar nenhum.
