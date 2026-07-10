@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "Serviços",
@@ -60,10 +61,7 @@ export default function Servicos() {
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {diagnostico.map((item) => (
-              <div
-                key={item.href}
-                className="border-border bg-bg-card flex flex-col rounded-md border p-6"
-              >
+              <Card key={item.href} className="flex flex-col">
                 <p className="text-text-muted font-mono text-xs tracking-wide uppercase">
                   {item.titulo}
                 </p>
@@ -77,7 +75,7 @@ export default function Servicos() {
                 >
                   {item.cta}
                 </Button>
-              </div>
+              </Card>
             ))}
           </div>
           <p className="text-text-muted mt-8 max-w-xl">

@@ -14,8 +14,14 @@
   --color-border: #272727;
   --color-border-hover: #3a3a3a;
   --color-text: #f2f2f2;
+  /*
+    text-muted é o único tom secundário aprovado (5.88:1 de contraste sobre
+    --color-bg, acima do mínimo WCAG AA de 4.5:1). Um token "text-faint"
+    (#565656, ~2.7:1) existiu aqui e foi removido — não estava no design
+    guide e reprovava em auditoria de acessibilidade (Lighthouse). Não
+    reintroduzir um tom mais apagado que este sem antes medir o contraste.
+  */
   --color-text-muted: #8c8c8c;
-  --color-text-faint: #565656;
   --color-contrast: #ffffff;
 }
 
@@ -27,7 +33,6 @@
   --color-border-hover: var(--color-border-hover);
   --color-text: var(--color-text);
   --color-text-muted: var(--color-text-muted);
-  --color-text-faint: var(--color-text-faint);
   --color-contrast: var(--color-contrast);
 
   --radius-sm: 4px;
@@ -44,4 +49,22 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-text);
+}
+
+/* Detalhe de marca: seleção de texto em contraste, não o azul padrão do navegador. */
+::selection {
+  background: var(--color-contrast);
+  color: var(--color-bg);
+}
+
+/* Quem pede menos movimento recebe transições quase instantâneas, não animação nenhuma removida às pressas. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

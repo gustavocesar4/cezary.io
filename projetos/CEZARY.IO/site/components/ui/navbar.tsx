@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
+import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/servicos", label: "Serviços" },
@@ -13,8 +15,13 @@ const links = [
   { href: "/faq", label: "FAQ" },
 ];
 
+function isActivePath(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="border-border border-b">
@@ -28,16 +35,25 @@ export function Navbar() {
           CEZARY.IO
         </Link>
 
-        <nav className="text-text-muted hidden items-center gap-6 text-sm sm:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-text transition-colors duration-150 ease-out"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-6 text-sm sm:flex">
+          {links.map((link) => {
+            const active = isActivePath(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "transition-colors duration-150 ease-out",
+                  active
+                    ? "text-text font-medium"
+                    : "text-text-muted hover:text-text",
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden sm:block">
@@ -69,16 +85,25 @@ export function Navbar() {
 
       {open && (
         <nav className="border-border flex flex-col gap-1 border-t px-6 py-4 sm:hidden">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-text-muted hover:text-text py-2 text-sm transition-colors duration-150 ease-out"
-              onClick={() => setOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) => {
+            const active = isActivePath(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "py-2 text-sm transition-colors duration-150 ease-out",
+                  active
+                    ? "text-text font-medium"
+                    : "text-text-muted hover:text-text",
+                )}
+                onClick={() => setOpen(false)}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <Link
             href="/orcamento"
             className="text-text py-2 text-sm font-medium"

@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function Orcamento() {
   return (
-    <section className="border-border border-b">
-      <div className="mx-auto max-w-xl px-6 py-16 sm:py-24">
+    <section>
+      <div className="mx-auto max-w-xl px-6 py-20 sm:py-28">
         <p className="text-text-muted mb-4 font-mono text-xs tracking-wide uppercase">
           Pedir orçamento
         </p>

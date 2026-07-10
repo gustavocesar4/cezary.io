@@ -244,3 +244,67 @@ problema de layout. Um tom azulado percebido no texto secundário sobre o
 fundo escuro foi investigado via `getComputedStyle` — confirmado como
 ilusão de ótica (contraste simultâneo contra o preto): a cor computada é
 `rgb(140,140,140)`, perfeitamente neutra.
+
+## Auditoria de qualidade e correções — 2026-07-10
+
+Auditoria crítica completa (hierarquia visual, ritmo, microinterações,
+performance, navegação, acessibilidade, SEO técnico, consistência de
+componentes, código duplicado) rodada com Lighthouse real contra o build
+de produção, não só leitura de código. Placar antes: Performance 99 ·
+Acessibilidade 96 · Boas práticas 100 · SEO 100. Único item reprovado:
+contraste de cor.
+
+13 itens corrigidos (o único item da auditoria deixado de fora, por
+pedido explícito, foi microanimação de entrada — mantém a identidade sem
+efeito decorativo):
+
+- **Contraste (alto impacto):** token `--color-text-faint` (#565656,
+  medía 2.69:1, reprovava WCAG AA) removido do sistema — nunca esteve no
+  design guide oficial. Todo uso trocado para `text-muted` (5.88:1).
+  Afetava o rodapé inteiro (todas as páginas) e os metadados do blog
+- **Favicon:** `app/icon.tsx` e `app/apple-icon.tsx` gerando o símbolo
+  Corte Preciso via `next/og` — o favicon.ico genérico do scaffold nunca
+  tinha sido substituído
+- **`app/not-found.tsx`:** 404 customizado, dentro da identidade
+- **SEO técnico:** `app/sitemap.ts`, `app/robots.ts`, `metadataBase`,
+  Open Graph + Twitter Card (`app/opengraph-image.tsx`), JSON-LD
+  (`Organization` no layout raiz, `BlogPosting` em cada artigo) — tudo
+  código puro, sem depender de nenhuma conta externa
+- **Componente `Card` nunca era usado:** Home e Serviços duplicavam
+  manualmente o estilo do card em 3 lugares. Trocado para importar o
+  componente real — elimina o risco de o visual divergir se o design
+  system mudar
+- **Navbar:** indicador de página ativa via `usePathname` +
+  `aria-current="page"`
+- **`prefers-reduced-motion`:** regra global em `globals.css` reduzindo
+  toda transição/animação a quase zero para quem pede menos movimento —
+  antes só existia nos artefatos de design da Fase 0, nunca tinha ido
+  pro código real
+- **Formulário de orçamento:** `aria-label` que expunha a chave técnica
+  (`"tipoNecessidade"`) removido — o `<fieldset>/<legend>` já dá o nome
+  acessível ao grupo, e a prop `name` do `ChoiceGroup` foi removida por
+  ter ficado sem uso
+- **Link "Pular para o conteúdo":** adicionado no layout raiz, visível só
+  no foco por teclado
+- **`::selection` customizado:** branco sobre preto, em vez do azul
+  padrão do navegador — mesma lógica de "contraste como destaque" já
+  usada no resto da identidade
+- **Ritmo vertical:** `/orcamento` usava o padding de "seção de
+  fechamento" (`py-16/24`) na única seção da página; corrigido para o
+  padrão de abertura (`py-20/28`) usado em todas as outras páginas.
+  Removida também uma borda inferior redundante bem acima do rodapé
+- **`app/blog/loading.tsx`:** skeleton simples enquanto a listagem carrega
+
+**Reauditoria pós-correções:** Acessibilidade 96 → **100** (zero audits
+reprovados). Boas práticas e SEO seguem 100. Performance mostrou 97 numa
+primeira leitura (LCP 2.0s → 2.5s) — investigado antes de aceitar como
+regressão: o elemento de LCP é o mesmo parágrafo do Hero de sempre, com
+apenas 92ms de atraso real registrado (`lcp-breakdown-insight`). Rodando
+sem a simulação de rede/CPU lenta do Lighthouse (`--throttling-method=
+provided`, medindo tempo real em vez de estimativa), o resultado é
+Performance 100 e LCP 0,1s — confirmando que a variação de 2 pontos era
+ruído da simulação de throttling (sensível à carga momentânea da
+máquina), não uma regressão real introduzida pelas correções.
+
+Testes e2e (`npm run test:e2e`) e `build` seguem passando limpos após
+todas as mudanças.

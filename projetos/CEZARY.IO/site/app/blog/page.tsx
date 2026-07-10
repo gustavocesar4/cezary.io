@@ -39,7 +39,7 @@ export default function Blog() {
             {posts.map((post) => (
               <li key={post.slug} className="py-6">
                 <Link href={`/blog/${post.slug}`} className="group block">
-                  <p className="text-text-faint font-mono text-xs">
+                  <p className="text-text-muted font-mono text-xs">
                     {formatDate(post.publishedAt)} · {post.readingMinutes} min
                     de leitura
                   </p>

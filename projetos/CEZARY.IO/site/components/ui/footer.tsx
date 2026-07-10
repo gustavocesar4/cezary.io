@@ -10,14 +10,14 @@ const links = [
 export function Footer() {
   return (
     <footer className="border-border border-t">
-      <div className="text-text-faint mx-auto flex max-w-5xl flex-col gap-4 px-6 py-8 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="text-text-muted mx-auto flex max-w-5xl flex-col gap-4 px-6 py-8 text-sm sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} CEZARY.IO</p>
         <nav className="flex gap-5">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="hover:text-text-muted transition-colors duration-150 ease-out"
+              className="hover:text-text transition-colors duration-150 ease-out"
             >
               {link.label}
             </Link>

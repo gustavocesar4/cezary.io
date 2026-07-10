@@ -19,22 +19,19 @@ type FormData = Record<string, string>;
 const TOTAL_STEPS = orcamentoStepSchemas.length;
 
 function ChoiceGroup({
-  name,
   options,
   value,
   onChange,
 }: {
-  name: string;
   options: ReadonlyArray<{ value: string; label: string }>;
   value: string | undefined;
   onChange: (value: string) => void;
 }) {
+  // Sem aria-label próprio de propósito: o <fieldset>/<legend> em volta
+  // (FieldGroup) já dá o nome acessível ao grupo — duplicar aqui só
+  // arriscaria divergir do texto do legend.
   return (
-    <div
-      role="radiogroup"
-      aria-label={name}
-      className="grid gap-2 sm:grid-cols-2"
-    >
+    <div role="radiogroup" className="grid gap-2 sm:grid-cols-2">
       {options.map((option) => (
         <button
           key={option.value}
@@ -185,7 +182,6 @@ export function OrcamentoForm() {
       {step === 0 && (
         <FieldGroup legend="O que você precisa?" error={errors.tipoNecessidade}>
           <ChoiceGroup
-            name="tipoNecessidade"
             options={tipoNecessidadeOptions}
             value={data.tipoNecessidade}
             onChange={(v) => set("tipoNecessidade", v)}
@@ -219,7 +215,6 @@ export function OrcamentoForm() {
             error={errors.oQueJaExiste}
           >
             <ChoiceGroup
-              name="oQueJaExiste"
               options={oQueJaExisteOptions}
               value={data.oQueJaExiste}
               onChange={(v) => set("oQueJaExiste", v)}
@@ -239,7 +234,6 @@ export function OrcamentoForm() {
         <div className="space-y-5">
           <FieldGroup legend="Faixa de investimento disponível (opcional)">
             <ChoiceGroup
-              name="faixaInvestimento"
               options={faixaInvestimentoOptions}
               value={data.faixaInvestimento}
               onChange={(v) => set("faixaInvestimento", v)}
@@ -247,7 +241,6 @@ export function OrcamentoForm() {
           </FieldGroup>
           <FieldGroup legend="Urgência" error={errors.urgencia}>
             <ChoiceGroup
-              name="urgencia"
               options={urgenciaOptions}
               value={data.urgencia}
               onChange={(v) => set("urgencia", v)}

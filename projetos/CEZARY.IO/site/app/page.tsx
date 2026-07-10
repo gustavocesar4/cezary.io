@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "CEZARY.IO",
@@ -90,11 +91,8 @@ export default function Home() {
           </p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {cenarios.map((cenario) => (
-              <li
-                key={cenario}
-                className="border-border bg-bg-card text-text-muted rounded-md border p-5 text-sm"
-              >
-                {cenario}
+              <li key={cenario}>
+                <Card className="text-text-muted p-5 text-sm">{cenario}</Card>
               </li>
             ))}
           </ul>
@@ -113,10 +111,7 @@ export default function Home() {
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {frentes.map((frente) => (
-              <div
-                key={frente.titulo}
-                className="border-border bg-bg-card flex flex-col rounded-md border p-6"
-              >
+              <Card key={frente.titulo} className="flex flex-col">
                 <h3 className="text-text font-semibold">{frente.titulo}</h3>
                 <p className="text-text-muted mt-3 flex-1 text-sm">
                   {frente.texto}
@@ -128,7 +123,7 @@ export default function Home() {
                 >
                   Saiba mais
                 </Button>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
