@@ -72,6 +72,11 @@ const step5Schema = z.object({
   email: z.email("E-mail inválido"),
   whatsapp: z.string().trim().min(8, "Informe um WhatsApp válido"),
   melhorHorario: z.string().trim().max(120).optional(),
+  // Honeypot anti-spam: campo escondido do usuário real via CSS. Bots que
+  // preenchem todo input do HTML tendem a preencher este também. Sem
+  // restrição de tamanho aqui de propósito — a checagem fica na API route,
+  // pra não devolver um erro de validação que ensine o bot a evitar o campo.
+  empresaSite: z.string().optional(),
 });
 
 export const orcamentoStepSchemas = [

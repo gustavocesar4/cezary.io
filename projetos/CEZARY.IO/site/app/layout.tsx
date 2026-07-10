@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import { Analytics } from "@/components/site/analytics";
 import { Footer } from "@/components/ui/footer";
 import { Navbar } from "@/components/ui/navbar";
 import { SITE_URL } from "@/lib/site";
@@ -38,6 +39,9 @@ export const metadata: Metadata = {
     title: "CEZARY.IO",
     description,
   },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
 };
 
 const organizationJsonLd = {
@@ -71,6 +75,7 @@ export default function RootLayout({
         >
           Pular para o conteúdo
         </a>
+        <Analytics />
         <Navbar />
         <main id="conteudo" className="flex flex-1 flex-col">
           {children}

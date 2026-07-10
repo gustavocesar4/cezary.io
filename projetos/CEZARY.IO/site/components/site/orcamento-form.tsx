@@ -280,6 +280,19 @@ export function OrcamentoForm() {
               placeholder="Ex.: tardes, após as 18h"
             />
           </Field>
+          {/* Honeypot anti-spam — invisível e inalcançável para usuários reais. */}
+          <div aria-hidden="true" className="sr-only">
+            <label htmlFor="empresaSite">Site da empresa</label>
+            <input
+              id="empresaSite"
+              name="empresaSite"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={data.empresaSite ?? ""}
+              onChange={(e) => set("empresaSite", e.target.value)}
+            />
+          </div>
         </div>
       )}
 

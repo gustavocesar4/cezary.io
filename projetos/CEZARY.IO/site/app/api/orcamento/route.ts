@@ -72,6 +72,12 @@ export async function POST(request: Request) {
     );
   }
 
+  // Honeypot: campo invisível para pessoas, atraente para bots. Se veio
+  // preenchido, finge sucesso sem processar nada — não vale alertar o bot.
+  if (parsed.data.empresaSite) {
+    return NextResponse.json({ ok: true });
+  }
+
   const [emailResult, secondChannelResult] = await Promise.allSettled([
     sendEmail(parsed.data),
     sendToSecondChannel(parsed.data),

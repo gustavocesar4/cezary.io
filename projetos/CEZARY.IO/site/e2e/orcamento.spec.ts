@@ -49,3 +49,24 @@ test("bloqueia avanço sem selecionar o tipo de necessidade", async ({
   await page.getByRole("button", { name: "Próximo" }).click();
   await expect(page.getByText("Selecione uma opção")).toBeVisible();
 });
+
+test("honeypot preenchido recebe sucesso falso sem processar o lead", async ({
+  request,
+}) => {
+  const res = await request.post("/api/orcamento", {
+    data: {
+      tipoNecessidade: "site",
+      nomeEmpresa: "Bot Ltda",
+      segmento: "Spam",
+      oQueJaExiste: "nada",
+      urgencia: "sem-prazo",
+      nome: "Bot",
+      email: "bot@example.com",
+      whatsapp: "00000000000",
+      empresaSite: "http://spam.example.com",
+    },
+  });
+
+  expect(res.status()).toBe(200);
+  expect(await res.json()).toEqual({ ok: true });
+});
