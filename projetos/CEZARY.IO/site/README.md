@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CEZARY.IO — site institucional
 
-## Getting Started
+Next.js (App Router) + TypeScript + Tailwind v4. Ver
+`projetos/CEZARY.IO/documentacao/arquitetura.md` para as decisões técnicas
+completas e o histórico de cada fase.
 
-First, run the development server:
+## Rodando localmente
 
 ```bash
+npm install
+cp .env.example .env.local   # preencher conforme documentacao/configuracao-integracoes.md
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Comando                | O que faz                                             |
+| ---------------------- | ----------------------------------------------------- |
+| `npm run dev`          | Servidor de desenvolvimento                           |
+| `npm run build`        | Build de produção                                     |
+| `npm run start`        | Roda o build de produção localmente                   |
+| `npm run lint`         | ESLint                                                |
+| `npm run format`       | Prettier (escreve)                                    |
+| `npm run format:check` | Prettier (só verifica)                                |
+| `npm run test:e2e`     | Playwright — cobre o fluxo do formulário de orçamento |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estrutura
 
-## Learn More
+- `app/` — rotas (App Router)
+- `components/ui/` — design system (Button, Card, Input, Logo, Navbar, Footer)
+- `components/site/` — composições específicas do site (formulário de orçamento, seções de serviço, MDX)
+- `content/blog/` — artigos em MDX, consumidos por `/publicar-tema` e `/aprovar-post`
+- `lib/` — schemas Zod, leitura do blog, utilitários
 
-To learn more about Next.js, take a look at the following resources:
+## Conteúdo do blog
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Frontmatter esperado em `content/blog/<slug>.mdx`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```yaml
+---
+title: "Título do artigo"
+description: "Meta description, 150-160 caracteres"
+publishedAt: YYYY-MM-DD
+author: "CEZARY.IO"
+keywords:
+  - palavra-chave
+draft: true
+---
+```
 
-## Deploy on Vercel
+Um post com `draft: true` fica fora da listagem **e** retorna 404 em acesso
+direto — só fica público quando `/aprovar-post` (ou edição manual) muda
+para `draft: false`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Identidade visual
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Nenhuma decisão de cor, tipografia ou componente deve ser feita direto
+neste código — a fonte da verdade é
+`identidade/design-guide.md` (raiz do workspace). Os tokens em
+`app/globals.css` são a tradução técnica daquele documento.

@@ -308,3 +308,62 @@ máquina), não uma regressão real introduzida pelas correções.
 
 Testes e2e (`npm run test:e2e`) e `build` seguem passando limpos após
 todas as mudanças.
+
+## Autonomia operacional — 2026-07-11
+
+A partir desta data, decisões operacionais (implementação, arquitetura,
+refatoração, testes, commits, pushes, deploys, correções técnicas) não
+passam mais por aprovação prévia. Interrupção só para: posicionamento de
+marca, UX/identidade que mude a proposta do produto, decisões de negócio,
+contratação de serviços/custos, criação de contas ou autenticação, compra
+de domínio, e qualquer ação irreversível ou que dependa de credenciais do
+usuário.
+
+**Hardening aplicado por iniciativa própria** (não fazia parte de nenhuma
+auditoria anterior, identificado como lacuna técnica coerente):
+
+- `app/error.tsx` — error boundary global, dentro da identidade (antes,
+  um erro de runtime caía na tela de erro genérica do Next.js)
+- `next.config.ts` — cabeçalhos de segurança (`X-Content-Type-Options`,
+  `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`),
+  confirmados presentes em produção via `curl -I`
+- Honeypot anti-spam no formulário de orçamento (`empresaSite`, campo
+  invisível para pessoas via `sr-only` + `aria-hidden`): se vier
+  preenchido, a API responde sucesso sem processar nada — testado em
+  `e2e/orcamento.spec.ts`
+- `README.md` do site reescrito (estava com o boilerplate padrão do
+  `create-next-app`)
+
+**Fase 6 — parte em código, preparada e já publicada:**
+
+- `components/site/analytics.tsx` — Google Analytics (GA4) e Meta Pixel,
+  cada um só carrega se `NEXT_PUBLIC_GA_MEASUREMENT_ID` /
+  `NEXT_PUBLIC_META_PIXEL_ID` existir. Nenhum script roda hoje
+- `metadata.verification.google` no layout raiz, ativado por
+  `GOOGLE_SITE_VERIFICATION` — cobre a verificação do Search Console
+  sem precisar adicionar HTML manualmente depois
+- `.env.example` atualizado com as 3 variáveis acima
+
+**Validado antes de publicar:** `lint`, `build` e os 3 testes e2e
+passando; Lighthouse rodado de novo (Acessibilidade 100, Boas práticas
+100, SEO 100, zero audits reprovados) — nenhuma regressão da rodada
+anterior. Deploy automático via push confirmado funcionando novamente
+(a falha pontual do commit anterior não se repetiu); cabeçalhos de
+segurança confirmados ativos na URL de produção.
+
+**O que fica fora de alcance até o usuário decidir** (motivo: cada item
+esbarra explicitamente numa das exceções acima):
+
+- Registro do domínio `cezary.io` — compra
+- Conta do Google Analytics + ID de medição — criação de conta
+- Verificação do Search Console + código — criação de conta
+- Conta do Meta Business + Pixel ID — criação de conta
+- Conta do Resend + API key (Fase 4, já documentado em
+  `configuracao-integracoes.md`) — criação de conta
+- Planilha + Apps Script do canal secundário (Fase 4, código já pronto em
+  `site/scripts/google-apps-script-orcamento.gs`) — criação de conta
+- **Vercel Web Analytics:** não ativado por iniciativa própria — mesmo
+  parecendo gratuito na maioria dos casos de uso, envolve uma
+  configuração de conta/plano que prefiro confirmar antes, já que o
+  usuário pediu para parar exatamente em "custos" e "contratação de
+  serviços"
